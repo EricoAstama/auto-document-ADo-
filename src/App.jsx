@@ -1,6 +1,7 @@
 import React from 'react';
 import DocumentManager from './components/DocumentManager';
 import { FileText } from 'lucide-react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import './index.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <main>
         <DocumentManager />
       </main>
+      <SpeedInsights />
     </div>
   );
 }
