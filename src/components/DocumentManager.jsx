@@ -147,7 +147,7 @@ const DocumentManager = () => {
         mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       });
 
-      const fileName = `Dokumen_${procurementTitle.replace(/\s+/g, '_')}_${format(new Date(), 'yyyyMMdd_HHmm')}.docx`;
+      const fileName = `BAKN_${procurementTitle}.docx`;
 
       const storagePath = `history/${Date.now()}_${fileName}`;
       await supabase.storage.from('documents').upload(storagePath, outBlob);
