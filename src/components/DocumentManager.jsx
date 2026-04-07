@@ -31,6 +31,7 @@ const DocumentManager = () => {
   const [isDownloading, setIsDownloading] = useState(null);
   const [isConverting, setIsConverting] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [preferredEngine, setPreferredEngine] = useState(localStorage.getItem('preferred_engine') || 'convertapi');
 
   useEffect(() => {
     fetchInitialData();
@@ -195,7 +196,10 @@ const DocumentManager = () => {
     try {
       // Panggil kembali Supabase Edge Function (yang sudah dipasang ConvertAPI)
       const { data, error } = await supabase.functions.invoke('convert-docx-to-pdf', {
-        body: { record_id: recordId }
+        body: { 
+          record_id: recordId,
+          preferred_engine: preferredEngine 
+        }
       });
 
       if (error) {
@@ -302,8 +306,25 @@ const DocumentManager = () => {
 
       <div className="history-section">
         <div className="card" style={{ height: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
-            <h2 className="card-title" style={{ marginBottom: 0 }}><History size={20} /> Riwayat Dokumen</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h2 className="card-title" style={{ marginBottom: '0.5rem' }}><History size={20} /> Riwayat Dokumen</h2>
+              <div className="api-selection" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#6b7280' }}>
+                <span>Engine:</span>
+                <select 
+                  value={preferredEngine} 
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPreferredEngine(val);
+                    localStorage.setItem('preferred_engine', val);
+                  }}
+                  style={{ padding: '2px 4px', borderRadius: '4px', border: '1px solid #d1d5db', fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                  <option value="convertapi">ConvertAPI</option>
+                  <option value="cloudmersive">Cloudmersive</option>
+                </select>
+              </div>
+            </div>
             {history.length > 0 && <button onClick={bulkDelete} style={{ background: 'none', color: '#ef4444', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Trash2 size={14} /> Clear All</button>}
           </div>
           
